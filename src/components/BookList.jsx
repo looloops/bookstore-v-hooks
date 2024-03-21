@@ -1,56 +1,50 @@
-import { Component } from "react";
+import { useState } from "react";
 import SingleBook from "./SingleBook";
-import { Col, InputGroup, Form } from "react-bootstrap";
+import { Col, InputGroup, Form, Row } from "react-bootstrap";
 import CommentArea from "./CommentArea";
 
-class BookList extends Component {
-  state = {
-    query: "",
-    selected: undefined,
+const BookList = (props) => {
+  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState(undefined);
+
+  const updateSelectedBook = (value) => {
+    setSelected(value);
   };
 
-  updateSelectedBook = (value) => {
-    this.setState({ selected: value });
+  const queryUpdate = (value) => {
+    setQuery(value);
   };
 
-  queryUpdate = (value) => {
-    this.setState({ query: value });
-  };
+  const books = props.books;
+  return (
+    <>
+      <InputGroup className="mb-3">
+        <Form.Control
+          placeholder="Insert book title"
+          aria-label="Search"
+          aria-describedby="basic-search"
+          value={query}
+          onChange={(e) => {
+            queryUpdate(e.target.value);
+          }}
+        />
+        <InputGroup.Text>Search</InputGroup.Text>
+      </InputGroup>
 
-  render() {
-    const books = this.props.books;
-    return (
-      <>
-        <InputGroup className="mb-3">
-          <Form.Control
-            placeholder="Insert book title"
-            aria-label="Search"
-            aria-describedby="basic-search"
-            value={this.state.query}
-            onChange={(e) => {
-              this.queryUpdate(e.target.value);
-            }}
-          />
-          <InputGroup.Text>Search</InputGroup.Text>
-        </InputGroup>
-        <Col sm={6} md={3} lg={4}>
+      <Col md={9}>
+        <Row>
           {books
-            .filter((book) => book.title.toLowerCase().includes(this.state.query.toLowerCase()))
+            .filter((book) => book.title.toLowerCase().includes(query.toLowerCase()))
             .map((book) => (
-              <SingleBook
-                book={book}
-                selectedBook={this.state.selected}
-                key={book.asin}
-                updateSelectedBook={this.updateSelectedBook}
-              />
+              <SingleBook book={book} selectedBook={selected} key={book.asin} updateSelectedBook={updateSelectedBook} />
             ))}
-        </Col>
-        <Col>
-          <CommentArea idBook={this.state.selected}></CommentArea>
-        </Col>
-      </>
-    );
-  }
-}
+        </Row>
+      </Col>
+      <Col md={3}>
+        <CommentArea idBook={selected}></CommentArea>
+      </Col>
+    </>
+  );
+};
 
 export default BookList;

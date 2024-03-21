@@ -1,14 +1,15 @@
 import Card from "react-bootstrap/Card";
-import { Component } from "react";
+import { Col } from "react-bootstrap";
 
-class SingleBook extends Component {
-  render() {
-    const item = this.props.book;
-    return (
-      <>
+const SingleBook = (props) => {
+  const item = props.book;
+  return (
+    <>
+      <Col xs={12} md={6} lg={4}>
         <Card
-          onClick={() => this.props.updateSelectedBook(item.asin)}
-          className={this.props.selectedBook === item.asin && "card-selected"}
+          data-testid="bookcard"
+          onClick={() => props.updateSelectedBook(item.asin)}
+          className={props.selectedBook === item.asin && "card-selected"}
         >
           <Card.Img style={{ width: "100%", objectFit: "cover", height: "600px" }} variant="top" src={item.img} />
           <Card.Body>
@@ -20,9 +21,9 @@ class SingleBook extends Component {
             </Card.Text>
           </Card.Body>
         </Card>
-      </>
-    );
-  }
-}
+      </Col>
+    </>
+  );
+};
 
 export default SingleBook;
